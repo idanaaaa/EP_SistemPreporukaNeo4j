@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Registracija')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('registracija')}"></nav>
+
+<main class="container" style="max-width: 540px">
+    <h1 class="mb-4">Registracija</h1>
+
+    <form th:action="@{/registracija}" th:object="${kupac}" method="post">
+        <div class="mb-3">
+            <label for="ime" class="form-label">Ime i prezime</label>
+            <input type="text" th:field="*{ime}" class="form-control" th:errorclass="is-invalid"
+                   maxlength="80" required>
+            <div class="invalid-feedback" th:errors="*{ime}">Greška</div>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid"
+                   maxlength="120" autocomplete="username" required>
+            <div class="invalid-feedback" th:errors="*{email}">Greška</div>
+        </div>
+        <div class="mb-3">
+            <label for="lozinka" class="form-label">Lozinka (barem 8 znakova)</label>
+            <!-- th:field na password polju namjerno ne vraća unesenu vrijednost u HTML -->
+            <input type="password" th:field="*{lozinka}" class="form-control" th:errorclass="is-invalid"
+                   minlength="8" autocomplete="new-password" required>
+            <div class="invalid-feedback" th:errors="*{lozinka}">Greška</div>
+        </div>
+        <div class="mb-3">
+            <label for="ulica" class="form-label">Ulica i broj</label>
+            <input type="text" th:field="*{ulica}" class="form-control" th:errorclass="is-invalid"
+                   maxlength="120" required>
+            <div class="invalid-feedback" th:errors="*{ulica}">Greška</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 mb-3">
+                <label for="grad" class="form-label">Grad</label>
+                <input type="text" th:field="*{grad}" class="form-control" th:errorclass="is-invalid"
+                       maxlength="60" required>
+                <div class="invalid-feedback" th:errors="*{grad}">Greška</div>
+            </div>
+            <div class="col-sm-4 mb-3">
+                <label for="postanskiBroj" class="form-label">Poštanski broj</label>
+                <input type="text" th:field="*{postanskiBroj}" class="form-control" th:errorclass="is-invalid"
+                       maxlength="10" required>
+                <div class="invalid-feedback" th:errors="*{postanskiBroj}">Greška</div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Registruj se</button>
+        <a th:href="@{/prijava}" class="btn btn-link">Već imate račun?</a>
+    </form>
+</main>
+</body>
+</html>

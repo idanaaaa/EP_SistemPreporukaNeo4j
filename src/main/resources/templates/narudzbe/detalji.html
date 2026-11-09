@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Narudžba #' + ${narudzba.id})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('narudzbe')}"></nav>
+
+<main class="container" style="max-width: 720px">
+    <a th:href="@{/narudzbe}" class="d-inline-block mb-3">&larr; Sve narudžbe</a>
+    <div th:replace="~{fragments/layout :: poruke}"></div>
+
+    <h1 th:text="'Narudžba #' + ${narudzba.id}">Narudžba</h1>
+    <p>
+        <span class="badge text-bg-secondary" th:text="${narudzba.status}">NOVA</span>
+        <span class="text-muted ms-2" th:text="${#temporals.format(narudzba.kreirano, 'dd.MM.yyyy. HH:mm')}">Datum</span>
+        <span class="text-muted ms-2" th:text="${narudzba.kupacIme}">Kupac</span>
+    </p>
+
+    <table class="table align-middle">
+        <thead>
+        <tr>
+            <th>Proizvod</th>
+            <th class="text-end">Količina</th>
+            <th class="text-end">Cijena</th>
+            <th class="text-end">Iznos</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${narudzba.stavke}">
+            <td><a th:href="@{/proizvodi/{id}(id=${s.proizvodId})}" th:text="${s.proizvodNaziv}">Naziv</a></td>
+            <td class="text-end" th:text="${s.kolicina}">1</td>
+            <td class="text-end"
+                th:text="${#numbers.formatDecimal(s.cijena, 1, 'POINT', 2, 'COMMA')} + ' KM'">0,00 KM</td>
+            <td class="text-end"
+                th:text="${#numbers.formatDecimal(s.iznos, 1, 'POINT', 2, 'COMMA')} + ' KM'">0,00 KM</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="3" class="text-end">Ukupno</th>
+            <th class="text-end"
+                th:text="${#numbers.formatDecimal(narudzba.ukupno, 1, 'POINT', 2, 'COMMA')} + ' KM'">0,00 KM</th>
+        </tr>
+        </tfoot>
+    </table>
+
+    <form sec:authorize="hasRole('ADMIN')" th:unless="${zavrsena}"
+          th:action="@{/narudzbe/{id}/status(id=${narudzba.id})}" method="post" class="row g-2">
+        <div class="col-auto">
+            <select name="status" class="form-select" aria-label="Novi status">
+                <option th:each="s : ${statusi}" th:value="${s}" th:text="${s}"
+                        th:selected="${s.name() == narudzba.status}">NOVA</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Promijeni status</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,8 @@
+CREATE USER IF NOT EXISTS 'app'@'localhost' IDENTIFIED BY 'app';
+
+CREATE DATABASE IF NOT EXISTS shop_cf CHARACTER SET utf8mb4;
+GRANT ALL PRIVILEGES ON shop_cf.* TO 'app'@'localhost';
+
+DROP DATABASE IF EXISTS shop_db;
+CREATE DATABASE shop_db CHARACTER SET utf8mb4;
+GRANT ALL PRIVILEGES ON shop_db.* TO 'app'@'localhost';

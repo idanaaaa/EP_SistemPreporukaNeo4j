@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(${proizvod.naziv})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('proizvodi')}"></nav>
+
+<main class="container" style="max-width: 720px">
+    <a th:href="@{/proizvodi}" class="d-inline-block mb-3">&larr; Svi proizvodi</a>
+    <div th:replace="~{fragments/layout :: poruke}"></div>
+
+    <h1 th:text="${proizvod.naziv}">Naziv</h1>
+    <div class="mb-3">
+        <a th:each="k : ${proizvod.kategorije}" th:href="@{/proizvodi(kategorijaId=${k.id})}"
+           class="badge text-bg-light border me-1 text-decoration-none" th:text="${k.naziv}">Kategorija</a>
+    </div>
+    <p class="lead" th:text="${proizvod.opis} ?: 'Bez opisa.'">Opis</p>
+
+    <dl class="row">
+        <dt class="col-sm-3">Cijena</dt>
+        <dd class="col-sm-9"
+            th:text="${#numbers.formatDecimal(proizvod.cijena, 1, 'POINT', 2, 'COMMA')} + ' KM'">0,00 KM</dd>
+        <dt class="col-sm-3">Na stanju</dt>
+        <dd class="col-sm-9" th:text="${proizvod.naStanju} + ' kom'">0 kom</dd>
+    </dl>
+
+    <form th:if="${proizvod.naStanju > 0}" th:action="@{/korpa/dodaj}" method="post" class="row g-2 mb-3">
+        <input type="hidden" name="proizvodId" th:value="${proizvod.id}">
+        <div class="col-auto">
+            <input type="number" name="kolicina" class="form-control" value="1" min="1"
+                   th:max="${proizvod.naStanju}" aria-label="Količina">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-success">Dodaj u korpu</button>
+        </div>
+    </form>
+    <p th:unless="${proizvod.naStanju > 0}" class="text-danger">Proizvod trenutno nije dostupan.</p>
+
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/proizvodi/{id}/uredi(id=${proizvod.id})}" class="btn btn-primary">Uredi</a>
+        <form th:action="@{/proizvodi/{id}/obrisi(id=${proizvod.id})}" method="post" class="d-inline"
+              onsubmit="return confirm('Obrisati proizvod?')">
+            <button type="submit" class="btn btn-outline-danger">Obriši</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

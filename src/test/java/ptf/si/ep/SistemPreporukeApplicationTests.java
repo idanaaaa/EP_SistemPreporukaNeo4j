@@ -1,4 +1,4 @@
-package ptf.si.ep.SistemPreporuke;
+package ptf.si.ep;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

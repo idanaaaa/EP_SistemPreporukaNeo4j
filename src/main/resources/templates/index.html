@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Početna')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('pocetna')}"></nav>
+
+<main class="container">
+    <h1 class="mb-4">EP Shop</h1>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">Najprodavaniji proizvodi</div>
+                <ul class="list-group list-group-flush">
+                    <li th:each="p : ${najprodavaniji}" class="list-group-item">
+                        <a th:href="@{/proizvodi/{id}(id=${p.id})}" th:text="${p.naziv}">Proizvod</a>
+                    </li>
+                    <li th:if="${#lists.isEmpty(najprodavaniji)}" class="list-group-item text-muted">
+                        Još nema narudžbi.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">Pred nestankom (manje od 10 komada)</div>
+                <ul class="list-group list-group-flush">
+                    <li th:each="p : ${predNestankom}"
+                        class="list-group-item d-flex justify-content-between">
+                        <a th:href="@{/proizvodi/{id}(id=${p.id})}" th:text="${p.naziv}">Proizvod</a>
+                        <span class="badge text-bg-warning" th:text="${p.naStanju} + ' kom'">0 kom</span>
+                    </li>
+                    <li th:if="${#lists.isEmpty(predNestankom)}" class="list-group-item text-muted">
+                        Svih proizvoda ima dovoljno.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

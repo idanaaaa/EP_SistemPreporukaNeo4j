@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${id == null} ? 'Novi proizvod' : 'Uredi proizvod')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('proizvodi')}"></nav>
+
+<main class="container" style="max-width: 720px">
+    <h1 class="mb-4" th:text="${id == null} ? 'Novi proizvod' : 'Uredi proizvod'">Proizvod</h1>
+    <div th:replace="~{fragments/layout :: poruke}"></div>
+
+    <!-- th:object + th:field vežu polja forme za ProizvodRequest (name, id i value se popune sami) -->
+    <form th:action="${id == null} ? @{/proizvodi} : @{/proizvodi/{id}(id=${id})}" th:object="${proizvod}"
+          method="post">
+        <div class="mb-3">
+            <label for="naziv" class="form-label">Naziv</label>
+            <input type="text" th:field="*{naziv}" class="form-control" th:errorclass="is-invalid"
+                   maxlength="120" required>
+            <div class="invalid-feedback" th:errors="*{naziv}">Greška</div>
+        </div>
+        <div class="mb-3">
+            <label for="opis" class="form-label">Opis</label>
+            <textarea th:field="*{opis}" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 mb-3">
+                <label for="cijena" class="form-label">Cijena (KM)</label>
+                <input type="number" th:field="*{cijena}" class="form-control" th:errorclass="is-invalid"
+                       min="0" step="0.01" required>
+                <div class="invalid-feedback" th:errors="*{cijena}">Greška</div>
+            </div>
+            <div class="col-sm-6 mb-3">
+                <label for="naStanju" class="form-label">Na stanju</label>
+                <input type="number" th:field="*{naStanju}" class="form-control" th:errorclass="is-invalid"
+                       min="0" step="1" required>
+                <div class="invalid-feedback" th:errors="*{naStanju}">Greška</div>
+            </div>
+        </div>
+        <fieldset class="mb-4">
+            <legend class="form-label fs-6">Kategorije</legend>
+            <div th:each="k : ${kategorije}" class="form-check form-check-inline">
+                <input type="checkbox" th:field="*{kategorijaIds}" th:value="${k.id}" class="form-check-input">
+                <label th:for="${#ids.prev('kategorijaIds')}" class="form-check-label"
+                       th:text="${k.naziv}">Kategorija</label>
+            </div>
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>
+        <a th:href="${id == null} ? @{/proizvodi} : @{/proizvodi/{id}(id=${id})}" class="btn btn-link">Odustani</a>
+    </form>
+</main>
+</body>
+</html>

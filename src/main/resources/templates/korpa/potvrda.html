@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Potvrda narudžbe')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('korpa')}"></nav>
+
+<main class="container" style="max-width: 720px">
+    <h1 class="mb-4">Potvrda narudžbe</h1>
+
+    <h2 class="h5">Adresa za dostavu</h2>
+    <address>
+        <span th:text="${kupac.ime}">Ime</span><br>
+        <span th:text="${kupac.ulica}">Ulica</span><br>
+        <span th:text="${kupac.postanskiBroj}">71000</span> <span th:text="${kupac.grad}">Grad</span>
+    </address>
+
+    <h2 class="h5">Stavke</h2>
+    <table class="table align-middle">
+        <tbody>
+        <tr th:each="s : ${stavke}">
+            <td th:text="${s.proizvod.naziv}">Naziv</td>
+            <td class="text-end" th:text="${s.kolicina} + ' kom'">1 kom</td>
+            <td class="text-end"
+                th:text="${#numbers.formatDecimal(s.iznos, 1, 'POINT', 2, 'COMMA')} + ' KM'">0,00 KM</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="2" class="text-end">Ukupno</th>
+            <th class="text-end" th:text="${#numbers.formatDecimal(ukupno, 1, 'POINT', 2, 'COMMA')} + ' KM'">0,00 KM</th>
+        </tr>
+        </tfoot>
+    </table>
+
+    <form th:action="@{/korpa/potvrda}" method="post">
+        <button type="submit" class="btn btn-primary">Potvrdi narudžbu</button>
+        <a th:href="@{/korpa}" class="btn btn-link">Nazad na korpu</a>
+    </form>
+</main>
+</body>
+</html>

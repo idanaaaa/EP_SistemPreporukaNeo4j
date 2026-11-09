@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Prijava')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('prijava')}"></nav>
+
+<main class="container" style="max-width: 420px">
+    <h1 class="mb-4">Prijava</h1>
+    <div th:replace="~{fragments/layout :: poruke}"></div>
+    <div th:if="${param.greska}" class="alert alert-danger">Pogrešan email ili lozinka.</div>
+
+    <!-- Ovaj POST ne ide na kontroler, nego na filter Spring Securityja (formLogin u SecurityConfig) -->
+    <form th:action="@{/prijava}" method="post">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-control" autocomplete="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="lozinka" class="form-label">Lozinka</label>
+            <input type="password" id="lozinka" name="lozinka" class="form-control"
+                   autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Prijavi se</button>
+        <a th:href="@{/registracija}" class="btn btn-link">Nemate račun?</a>
+    </form>
+</main>
+</body>
+</html>

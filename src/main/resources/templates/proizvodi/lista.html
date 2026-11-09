@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Proizvodi')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('proizvodi')}"></nav>
+
+<main class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="m-0">Proizvodi</h1>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/proizvodi/novi}" class="btn btn-primary">Novi proizvod</a>
+    </div>
+    <div th:replace="~{fragments/layout :: poruke}"></div>
+
+    <form th:action="@{/proizvodi}" method="get" class="row g-2 mb-4">
+        <div class="col-sm-5">
+            <input type="search" name="naziv" class="form-control" placeholder="Pretraga po nazivu"
+                   th:value="${naziv}">
+        </div>
+        <div class="col-sm-4">
+            <select name="kategorijaId" class="form-select">
+                <option value="">Sve kategorije</option>
+                <option th:each="k : ${kategorije}" th:value="${k.id}" th:text="${k.naziv}"
+                        th:selected="${k.id == kategorijaId}">Kategorija</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-primary">Traži</button>
+            <a th:href="@{/proizvodi}" class="btn btn-link">Poništi</a>
+        </div>
+    </form>
+
+    <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+            <th>Naziv</th>
+            <th>Kategorije</th>
+            <th class="text-end">Cijena</th>
+            <th class="text-end">Na stanju</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${proizvodi}">
+            <td><a th:href="@{/proizvodi/{id}(id=${p.id})}" th:text="${p.naziv}">Naziv</a></td>
+            <td>
+                <span th:each="k : ${p.kategorije}" class="badge text-bg-light border me-1"
+                      th:text="${k.naziv}">Kategorija</span>
+            </td>
+            <td class="text-end"
+                th:text="${#numbers.formatDecimal(p.cijena, 1, 'POINT', 2, 'COMMA')} + ' KM'">0,00 KM</td>
+            <td class="text-end" th:classappend="${p.naStanju < 10} ? 'text-danger fw-semibold'"
+                th:text="${p.naStanju}">0</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(proizvodi)}">
+            <td colspan="4" class="text-muted">Nema proizvoda za zadanu pretragu.</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

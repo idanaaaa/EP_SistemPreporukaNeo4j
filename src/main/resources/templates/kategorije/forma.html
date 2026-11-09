@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Uredi kategoriju')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('kategorije')}"></nav>
+
+<main class="container" style="max-width: 540px">
+    <h1 class="mb-4">Uredi kategoriju</h1>
+    <div th:replace="~{fragments/layout :: poruke}"></div>
+
+    <form th:action="@{/kategorije/{id}(id=${kategorija.id})}" method="post">
+        <div class="mb-3">
+            <label for="naziv" class="form-label">Naziv</label>
+            <input type="text" id="naziv" name="naziv" class="form-control" th:value="${kategorija.naziv}"
+                   maxlength="60" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>
+        <a th:href="@{/kategorije}" class="btn btn-link">Odustani</a>
+    </form>
+</main>
+</body>
+</html>

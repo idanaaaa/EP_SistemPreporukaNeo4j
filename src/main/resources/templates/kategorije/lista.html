@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bs" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Kategorije')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('kategorije')}"></nav>
+
+<main class="container">
+    <h1 class="mb-4">Kategorije</h1>
+    <div th:replace="~{fragments/layout :: poruke}"></div>
+
+    <form sec:authorize="hasRole('ADMIN')" th:action="@{/kategorije}" method="post" class="row g-2 mb-4">
+        <div class="col-auto">
+            <input type="text" name="naziv" class="form-control" placeholder="Naziv nove kategorije"
+                   maxlength="60" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+        </div>
+    </form>
+
+    <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+            <th>Naziv</th>
+            <th sec:authorize="hasRole('ADMIN')" class="text-end">Akcije</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="k : ${kategorije}">
+            <td>
+                <a th:href="@{/proizvodi(kategorijaId=${k.id})}" th:text="${k.naziv}">Naziv</a>
+            </td>
+            <td sec:authorize="hasRole('ADMIN')" class="text-end">
+                <a th:href="@{/kategorije/{id}/uredi(id=${k.id})}" class="btn btn-sm btn-outline-secondary">Uredi</a>
+                <form th:action="@{/kategorije/{id}/obrisi(id=${k.id})}" method="post" class="d-inline"
+                      onsubmit="return confirm('Obrisati kategoriju? Proizvodi ostaju, samo gube ovu kategoriju.')">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(kategorije)}">
+            <td colspan="2" class="text-muted">Nema kategorija.</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>
